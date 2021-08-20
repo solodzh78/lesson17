@@ -1,24 +1,25 @@
-window.addEventListener('DOMContentLoaded', function() {
-  'use strict';
+window.addEventListener('DOMContentLoaded', () => {
+
   // Timer
   function countTimer(deadline) {
-    let timerHours = document.querySelector('#timer-hours'),
-        timerMinutes = document.querySelector('#timer-minutes'),
-        timerSeconds = document.querySelector('#timer-seconds'),
-        timer1;
+    const timerHours = document.querySelector('#timer-hours'),
+      timerMinutes = document.querySelector('#timer-minutes'),
+      timerSeconds = document.querySelector('#timer-seconds');
+    // eslint-disable-next-line prefer-const
+    let timer1;
 
     function getTimeRemaining() {
-      let dateStop = new Date(deadline).getTime(),
-          dateNow = new Date().getTime(),
-          timeRemaining = (dateStop - dateNow) / 1000,
-          seconds = Math.floor(timeRemaining % 60),
-          minutes = Math.floor(timeRemaining / 60 % 60),
-          hours = Math.floor(timeRemaining / 60 / 60);
-          return {timeRemaining, hours, minutes, seconds};
+      const dateStop = new Date(deadline).getTime(),
+        dateNow = new Date().getTime(),
+        timeRemaining = (dateStop - dateNow) / 1000,
+        seconds = Math.floor(timeRemaining % 60),
+        minutes = Math.floor(timeRemaining / 60 % 60),
+        hours = Math.floor(timeRemaining / 60 / 60);
+      return { timeRemaining, hours, minutes, seconds };
     }
 
     function updateClock() {
-      let timer = getTimeRemaining();
+      const timer = getTimeRemaining();
 
       if (timer.timeRemaining > 0) {
         timerHours.textContent = timer.hours > 9 ?  timer.hours : `0${timer.hours}`;
@@ -34,10 +35,8 @@ window.addEventListener('DOMContentLoaded', function() {
         }
       }
     }
-    updateClock();  
+    updateClock();
     timer1 = setInterval(updateClock, 1000);
-
   }
-  
   countTimer('22 august 2021');
 });
