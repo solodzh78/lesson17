@@ -4,7 +4,8 @@ window.addEventListener('DOMContentLoaded', function() {
   function countTimer(deadline) {
     let timerHours = document.querySelector('#timer-hours'),
         timerMinutes = document.querySelector('#timer-minutes'),
-        timerSeconds = document.querySelector('#timer-seconds');
+        timerSeconds = document.querySelector('#timer-seconds'),
+        timer1;
 
     function getTimeRemaining() {
       let dateStop = new Date(deadline).getTime(),
@@ -28,13 +29,15 @@ window.addEventListener('DOMContentLoaded', function() {
         timerMinutes.textContent = '00';
         timerSeconds.textContent = '00';
 
-        clearInterval(timer1);
+        if (timer1) {
+          clearInterval(timer1);
+        }
       }
     }
-
-    let timer1 = setInterval(updateClock, 1000);
+    updateClock();  
+    timer1 = setInterval(updateClock, 1000);
 
   }
-
-  countTimer('20 august 2021');
+  
+  countTimer('22 august 2021');
 });
