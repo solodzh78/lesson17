@@ -109,14 +109,23 @@ window.addEventListener('DOMContentLoaded', () => {
 
     popupBtn.forEach((elem => {
       elem.addEventListener('click', () => {
-        popupOpenAnim();
-        popup.style.display = 'block';
 
+        if (screen.width < 768) {
+          popup.style.display = 'block';
+        } else {
+          popupOpenAnim();
+          popup.style.display = 'block';
+        }
       });
     }));
 
     popupClose.addEventListener('click', () => {
-      popupCloseAnim();
+
+      if (screen.width < 768) {
+        popup.style.display = 'none';
+      } else {
+        popupCloseAnim();
+      }
     });
 
 
