@@ -40,29 +40,24 @@ window.addEventListener('DOMContentLoaded', () => {
   };
   countTimer('22 august 2021');
 
-  // Меню
+  // Меню =========================================================================================
   const toggleMenu = () => {
 
-    const menuBtn = document.querySelector('.menu');
     const menu = document.querySelector('menu');
-    const closeBtn = document.querySelector('.close-btn');
-    const menuItems = menu.querySelectorAll('ul>li');
 
     const handlerMenu = () => {
       menu.classList.toggle('active-menu');
+    };
 
-      // eslint-disable-next-line indent
-/*       if (!menu.style.transform || menu.style.transform === 'translate(-100%)') {
-        menu.style.transform = 'translate(0)';
-      } else {
-        menu.style.transform = 'translate(-100%)';
+    document.addEventListener('click', e => {
+      const target = e.target;
+      if (target.classList.contains('close-btn') ||
+      target.closest('menu>ul>li>a') ||
+      target.closest('.menu') ||
+      (menu.classList.contains('active-menu') && !target.closest('menu'))) {
+        handlerMenu();
       }
- */    };
-
-    menuBtn.addEventListener('click', handlerMenu);
-    closeBtn.addEventListener('click', handlerMenu);
-    menuItems.forEach(elem => elem.addEventListener('click', handlerMenu));
-
+    });
   };
 
   toggleMenu();
@@ -71,66 +66,104 @@ window.addEventListener('DOMContentLoaded', () => {
 
   const togglePopup = () => {
     const popup = document.querySelector('.popup');
-    console.log('popup: ', popup);
     const popupBtn = document.querySelectorAll('.popup-btn');
-    const popupClose = document.querySelector('.popup-close');
 
     // Popup animation
     const popupOpenAnim = () => {
-      let count = 0;
-      popup.style.opacity = '0';
-      const timer = requestAnimationFrame(function popOpen() {
-        count += 0.05;
-        popup.style.opacity = count.toString();
-        if (popup.style.opacity === '1') {
-          cancelAnimationFrame(timer);
-        } else {
-          requestAnimationFrame(popOpen);
-        }
-      });
+
+      if (screen.width < 768) {
+        popup.style.display = 'block';
+      } else {
+        let count = 0;
+        popup.style.opacity = '0';
+        const timer = requestAnimationFrame(function popOpen() {
+          count += 0.05;
+          popup.style.opacity = count.toString();
+
+          if (popup.style.opacity === '1') {
+            cancelAnimationFrame(timer);
+          } else {
+            requestAnimationFrame(popOpen);
+          }
+          popup.style.display = 'block';
+        });
+      }
     };
 
     const popupCloseAnim = () => {
-      let count = 1;
-      popup.style.opacity = '1';
-      const timer = requestAnimationFrame(function popClose() {
-        count -= 0.05;
-        popup.style.opacity = count.toString();
-        if (popup.style.opacity <= 0) {
-          clearInterval(timer);
-          popup.style.opacity = '1';
-          popup.style.display = 'none';
-        } else {
-          requestAnimationFrame(popClose);
-        }
-      });
-    };
-
-
-    popupBtn.forEach((elem => {
-      elem.addEventListener('click', () => {
-
-        if (screen.width < 768) {
-          popup.style.display = 'block';
-        } else {
-          popupOpenAnim();
-          popup.style.display = 'block';
-        }
-      });
-    }));
-
-    popupClose.addEventListener('click', () => {
 
       if (screen.width < 768) {
         popup.style.display = 'none';
       } else {
-        popupCloseAnim();
+        let count = 1;
+        popup.style.opacity = '1';
+        const timer = requestAnimationFrame(function popClose() {
+          count -= 0.05;
+          popup.style.opacity = count.toString();
+
+          if (popup.style.opacity <= 0) {
+            clearInterval(timer);
+            popup.style.opacity = '1';
+            popup.style.display = 'none';
+          } else {
+            requestAnimationFrame(popClose);
+          }
+        });
       }
+    };
+
+
+    popupBtn.forEach(elem => {
+      elem.addEventListener('click', popupOpenAnim);
     });
 
+    popup.addEventListener('click', e => {
+      let target = e.target;
+
+      if (target.classList.contains('popup-close')) {
+        popupCloseAnim();
+      } else {
+        target = target.closest('.popup-content');
+
+        if (!target) { popupCloseAnim(); }
+      }
+    });
 
   };
 
   togglePopup();
+
+  // Табы
+  const tabs = () => {
+    const tabHeader = document.querySelector('.service-header');
+    const tab = tabHeader.querySelectorAll('.service-header-tab');
+    const tabContent = document.querySelectorAll('.service-tab');
+
+    const toggleTabContent = index => {
+      for (let i = 0; i < tabContent.length; i++) {
+        if (index === i) {
+          tab[i].classList.add('active');
+          tabContent[i].classList.remove('d-none');
+        } else {
+          tabContent[i].classList.add('d-none');
+          tab[i].classList.remove('active');
+        }
+      }
+    };
+    tabHeader.addEventListener('click', e => {
+      let target = e.target;
+      target = target.closest('.service-header-tab');
+
+      if (target) {
+        tab.forEach((item, i) => {
+          if (item === target) {
+            toggleTabContent(i);
+          }
+        });
+      }
+    });
+  };
+
+  tabs();
 
 });
