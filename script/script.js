@@ -279,4 +279,74 @@ window.addEventListener('DOMContentLoaded', () => {
 
   slider();
 
+  // Смена фото
+  const changePic = () => {
+    const commandFotos = document.querySelectorAll('.command__photo');
+    commandFotos.forEach(elem => {
+      let firstPic;
+      elem.addEventListener('mouseenter', e => {
+        firstPic = e.target.src;
+        e.target.src = e.target.dataset.img;
+      });
+      elem.addEventListener('mouseleave', e => {
+        e.target.src = firstPic;
+      });
+    });
+  };
+
+  changePic();
+
+  // Валидация полей ввода
+  const fieldsValidation = () => {
+    const numericFields = document.querySelectorAll('[type="text"].calc-item');
+    const textFields = document.querySelectorAll('#form2-name, #form2-message');
+    const email = document.getElementById('form2-email');
+    const telefon = document.getElementById('form2-phone');
+
+    numericFields.forEach(elem => {
+      elem.addEventListener('input', e => {
+        e.target.value = e.target.value.replace(/\D/g, '');
+      });
+      elem.addEventListener('blur', e => {
+        e.target.value = e.target.value.replace(/\D/g, '');
+      });
+    });
+
+    textFields.forEach(elem => {
+      elem.addEventListener('input', e => {
+        e.target.value = e.target.value.replace(/[^А-Яа-яёЁ -]/g, '');
+      });
+      elem.addEventListener('blur', e => {
+        e.target.value = e.target.value.replace(/^-+|^ +|-+$| +$|[^А-Яа-яёЁ -]/g, '');
+        e.target.value = e.target.value.replace(/--+/g, '-');
+        e.target.value = e.target.value.replace(/ +/g, ' ');
+        if (e.target.matches('#form2-name')) {
+          e.target.value = e.target.value.split(' ').
+            map(elem => elem[0].toUpperCase() + elem.slice(1).toLowerCase()).
+            join(' ');
+        }
+      });
+    });
+
+
+    email.addEventListener('input', e => {
+      e.target.value = e.target.value.replace(/[^A-Za-z-_@~.!*']/g, '');
+    });
+    email.addEventListener('blur', e => {
+      e.target.value = e.target.value.replace(/^-+|-+$|[^A-Za-z-_@~.!*']/g, '');
+      e.target.value = e.target.value.replace(/--+/g, '-');
+    });
+
+    telefon.addEventListener('input', e => {
+      e.target.value = e.target.value.replace(/[^\d()-]/g, '');
+    });
+    telefon.addEventListener('blur', e => {
+      e.target.value = e.target.value.replace(/^-+|-+$|[^\d()-]/g, '');
+      e.target.value = e.target.value.replace(/--+/g, '-');
+    });
+
+  };
+
+  fieldsValidation();
+
 });
