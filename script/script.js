@@ -297,6 +297,80 @@ window.addEventListener('DOMContentLoaded', () => {
   changePic();
 
   // Валидация полей ввода
+  const validForm1 = new Validator({
+    selector: '#form1',
+    pattern: {
+      user_name: /^[А-Яа-яёЁ ]+$/,
+      user_phone: /^\+?[78]\d{10}$/
+    },
+    method: {
+      'user_phone': [
+        ['notEmpty'],
+        ['pattern', 'user_phone']
+      ],
+      'user_email': [
+        ['notEmpty'],
+        ['pattern', 'email']
+      ],
+      'user_name': [
+        ['notEmpty'],
+        ['pattern', 'user_name']
+      ]
+    }
+  });
+  validForm1.init();
+
+  const validForm2 = new Validator({
+    selector: '#form2',
+    pattern: {
+      user_name: /^[А-Яа-яёЁ ]+$/,
+      user_phone: /^\+?[78]\d{10}$/,
+      user_message: /^[А-Яа-яёЁ \-,.!?:;\d]+$/
+    },
+    method: {
+      'user_phone': [
+        ['notEmpty'],
+        ['pattern', 'user_phone']
+      ],
+      'user_email': [
+        ['notEmpty'],
+        ['pattern', 'email']
+      ],
+      'user_name': [
+        ['notEmpty'],
+        ['pattern', 'user_name']
+      ],
+      'user_message': [
+        ['notEmpty'],
+        ['pattern', 'user_message']
+      ]
+    }
+  });
+  validForm2.init();
+
+  const validForm3 = new Validator({
+    selector: '#form3',
+    pattern: {
+      user_name: /^[А-Яа-яёЁ ]+$/,
+      user_phone: /^\+?[78]\d{10}$/
+    },
+    method: {
+      'user_phone': [
+        ['notEmpty'],
+        ['pattern', 'user_phone']
+      ],
+      'user_email': [
+        ['notEmpty'],
+        ['pattern', 'email']
+      ],
+      'user_name': [
+        ['notEmpty'],
+        ['pattern', 'user_name']
+      ]
+    }
+  });
+  validForm3.init();
+
   const fieldsValidation = () => {
     const numericFields = document.querySelectorAll('[type="text"].calc-item');
     const textFields = document.querySelectorAll('#form2-name, #form2-message');
@@ -347,7 +421,7 @@ window.addEventListener('DOMContentLoaded', () => {
 
   };
 
-  fieldsValidation();
+  // fieldsValidation();
 
   // Калькулятор
 
@@ -414,5 +488,71 @@ window.addEventListener('DOMContentLoaded', () => {
   };
 
   calc();
+
+  // Ajax запрос
+
+  const sendForm = id => {
+    const errorMassage = 'Что-то пошло не так...';
+    const loadMassage = 'Загрузка...';
+    const successMassage = 'Спасибо! Мы скоро с вами свяжемся!';
+
+    const form = document.getElementById(id);
+    console.dir(form);
+
+    const statusMessage = document.createElement('div');
+    const preloader = document.createElement('img');
+    preloader.src = "./images/preloader.svg";
+    statusMessage.append(preloader);
+    statusMessage.style.cssText = 'font-size: 2rem; color: white;';
+
+    form.addEventListener('submit', e => {
+      if (form.classList.contains('validation-error')) {
+        return;
+      }
+      e.preventDefault();
+      form.append(preloader, statusMessage);
+      statusMessage.textContent = loadMassage;
+      const formData = new FormData(form);
+      const body = {};
+      for (const val of formData.entries()) {
+        body[val[0]] = val[1];
+      }
+
+      const postData = (body, outputData, errorData) => {
+        const request = new XMLHttpRequest();
+        request.addEventListener('readystatechange', () => {
+          if (request.readyState !== 4) {
+            return;
+          }
+          if (request.status === 200) {
+            outputData();
+          } else {
+            errorData(request.status);
+          }
+        });
+        request.open('POST', './server.php');
+        request.setRequestHeader('Content-Type', 'aplication/json');
+        request.send(JSON.stringify(body));
+      };
+
+      postData(body,
+        () => {
+          form.reset();
+          preloader.remove();
+          statusMessage.textContent = successMassage;
+        },
+        error => {
+          preloader.remove();
+          statusMessage.textContent = errorMassage;
+          console.error(error);
+        }
+      );
+    });
+
+  };
+
+  sendForm('form1');
+  sendForm('form2');
+  sendForm('form3');
 
 });
