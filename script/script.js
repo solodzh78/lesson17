@@ -373,9 +373,10 @@ window.addEventListener('DOMContentLoaded', () => {
 
   const fieldsValidation = () => {
     const numericFields = document.querySelectorAll('[type="text"].calc-item');
-    const textFields = document.querySelectorAll('#form2-name, #form2-message');
-    const email = document.getElementById('form2-email');
-    const telefon = document.getElementById('form2-phone');
+    const userName = document.querySelectorAll('[name="user_name"]');
+    const userMessage = document.querySelectorAll('[name="user_message"]');
+    const email = document.querySelectorAll('[name="user_email"]');
+    const telefon = document.querySelectorAll('[name="user_phone"]');
 
     numericFields.forEach(elem => {
       elem.addEventListener('input', e => {
@@ -386,12 +387,28 @@ window.addEventListener('DOMContentLoaded', () => {
       });
     });
 
-    textFields.forEach(elem => {
+    userName.forEach(elem => {
       elem.addEventListener('input', e => {
-        e.target.value = e.target.value.replace(/[^А-Яа-яёЁ -]/g, '');
+        e.target.value = e.target.value.replace(/[^А-Яа-яёЁ ]/g, '');
       });
       elem.addEventListener('blur', e => {
         e.target.value = e.target.value.replace(/^-+|^ +|-+$| +$|[^А-Яа-яёЁ -]/g, '');
+        e.target.value = e.target.value.replace(/--+/g, '-');
+        e.target.value = e.target.value.replace(/ +/g, ' ');
+        if (e.target.matches('#form2-name') && e.target.value) {
+          e.target.value = e.target.value.split(' ').
+            map(elem => elem[0].toUpperCase() + elem.slice(1).toLowerCase()).
+            join(' ');
+        }
+      });
+    });
+
+    userMessage.forEach(elem => {
+      elem.addEventListener('input', e => {
+        e.target.value = e.target.value.replace(/[^А-Яа-яёЁ ,.!?]/g, '');
+      });
+      elem.addEventListener('blur', e => {
+        e.target.value = e.target.value.replace(/^-+|^ +|-+$| +$|[^А-Яа-яёЁ ,.!?]/g, '');
         e.target.value = e.target.value.replace(/--+/g, '-');
         e.target.value = e.target.value.replace(/ +/g, ' ');
         if (e.target.matches('#form2-name')) {
@@ -402,26 +419,29 @@ window.addEventListener('DOMContentLoaded', () => {
       });
     });
 
+    email.forEach(elem => {
+      elem.addEventListener('input', e => {
+        e.target.value = e.target.value.replace(/[^A-Za-z-_@~.!*']/g, '');
+      });
+      elem.addEventListener('blur', e => {
+        e.target.value = e.target.value.replace(/^-+|-+$|[^A-Za-z-_@~.!*']/g, '');
+      });
+    });
 
-    email.addEventListener('input', e => {
-      e.target.value = e.target.value.replace(/[^A-Za-z-_@~.!*']/g, '');
-    });
-    email.addEventListener('blur', e => {
-      e.target.value = e.target.value.replace(/^-+|-+$|[^A-Za-z-_@~.!*']/g, '');
-      e.target.value = e.target.value.replace(/--+/g, '-');
-    });
 
-    telefon.addEventListener('input', e => {
-      e.target.value = e.target.value.replace(/[^\d()-]/g, '');
-    });
-    telefon.addEventListener('blur', e => {
-      e.target.value = e.target.value.replace(/^-+|-+$|[^\d()-]/g, '');
-      e.target.value = e.target.value.replace(/--+/g, '-');
+    telefon.forEach(elem => {
+      elem.addEventListener('input', e => {
+        e.target.value = e.target.value.replace(/[^\d+]/g, '');
+      });
+      // elem.addEventListener('blur', e => {
+      //   e.target.value = e.target.value.replace(/^-+|-+$|[^\d()-]/g, '');
+      //   e.target.value = e.target.value.replace(/--+/g, '-');
+      // });
     });
 
   };
 
-  // fieldsValidation();
+  fieldsValidation();
 
   // Калькулятор
 
@@ -497,7 +517,6 @@ window.addEventListener('DOMContentLoaded', () => {
     const successMassage = 'Спасибо! Мы скоро с вами свяжемся!';
 
     const form = document.getElementById(id);
-    console.dir(form);
 
     const statusMessage = document.createElement('div');
     const preloader = document.createElement('img');
@@ -540,11 +559,20 @@ window.addEventListener('DOMContentLoaded', () => {
           form.reset();
           preloader.remove();
           statusMessage.textContent = successMassage;
+          setTimeout(() => {
+            statusMessage.remove();
+            if (form.id === 'form3') {
+              form.parentElement.parentElement.parentElement.style.display = 'none';
+            }
+          }, 2000);
         },
         error => {
           preloader.remove();
           statusMessage.textContent = errorMassage;
           console.error(error);
+          setTimeout(() => {
+            console.log(form.querySelector('.form-btn').nextElementSibling);
+          }, 2000);
         }
       );
     });
