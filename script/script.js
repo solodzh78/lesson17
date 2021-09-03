@@ -536,47 +536,40 @@ window.addEventListener('DOMContentLoaded', () => {
       for (const val of formData.entries()) {
         body[val[0]] = val[1];
       }
-
-      // Promises==================================================================
-      const postData = body => new Promise((resolve, reject) => {
-        const request = new XMLHttpRequest();
-        request.addEventListener('readystatechange', () => {
-          if (request.readyState !== 4) {
-            return;
-          }
-          if (request.status === 200) {
-            resolve();
-          } else {
-            reject(request.statusText);
-          }
-        });
-        request.open('POST', './server.php');
-        request.setRequestHeader('Content-Type', 'aplication/json');
-        request.send(JSON.stringify(body));
+      // Fetch=====================================================================
+      const postData = body => fetch('./server.php', {
+        method: 'POST',
+        body: JSON.stringify(body),
+        headers: {
+          'Content-Type': 'application/json'
+        }
       });
 
-      postData(body)
-        .then(() => {
+      const showMessage = msg => {
+        preloader.remove();
+        statusMessage.textContent = msg;
+        setTimeout(() => {
           form.reset();
-          preloader.remove();
-          statusMessage.textContent = successMassage;
-          setTimeout(() => {
-            statusMessage.remove();
-            if (form.id === 'form3') {
-              form.parentElement.parentElement.parentElement.style.display = 'none';
-            }
-          }, 2000);
+          statusMessage.remove();
+          if (form.id === 'form3') {
+            form.parentElement.parentElement.parentElement.style.display = 'none';
+          }
+        }, 2000);
+      };
+
+      postData(body)
+        .then(response => {
+
+          if (response.status !== 200) {
+            throw new Error('Status network not 200');
+          }
+          showMessage(successMassage);
         })
         .catch(error => {
-          preloader.remove();
-          statusMessage.textContent = errorMassage;
           console.error(error);
-          setTimeout(() => {
-            console.log(form.querySelector('.form-btn').nextElementSibling);
-          }, 2000);
+          showMessage(errorMassage);
         });
     });
-
   };
 
   sendForm('form1');
