@@ -1,5 +1,23 @@
 const toggleMenu = () => {
 
+  const anchors = document.querySelectorAll('a[href^="#"]');
+
+  for (const anchor of anchors) {
+    const blockID = anchor.getAttribute('href');
+    if (blockID === '#') continue;
+
+    if (document.querySelector(blockID)) {
+      anchor.addEventListener('click', e => {
+        e.preventDefault();
+        console.log('blockID: ', document.querySelector(blockID));
+        document.querySelector(blockID).scrollIntoView({
+          behavior: 'smooth',
+          block: 'start'
+        });
+      });
+    }
+  }
+
   const menu = document.querySelector('menu');
 
   const handlerMenu = () => {

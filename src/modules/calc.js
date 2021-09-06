@@ -10,18 +10,28 @@ const calc = (price = 100) => {
   const showResult = total => {
     let startValue = +totalValue.textContent;
     const endValue = total;
-    const step = Math.round((endValue - startValue) / 60);
+    const step = Math.round((endValue - startValue) / 15);
 
     const animResult = () => {
       startValue += step;
-
-      if (startValue < endValue) {
-        requestAnimationFrame(() => {
-          totalValue.textContent = Math.round(startValue);
-          return animResult();
-        });
+      if (step > 0) {
+        if (startValue < endValue) {
+          requestAnimationFrame(() => {
+            totalValue.textContent = Math.round(startValue);
+            return animResult();
+          });
+        } else {
+          totalValue.textContent = Math.round(endValue);
+        }
       } else {
-        totalValue.textContent = Math.round(endValue);
+        if (startValue > endValue) {
+          requestAnimationFrame(() => {
+            totalValue.textContent = Math.round(startValue);
+            return animResult();
+          });
+        } else {
+          totalValue.textContent = Math.round(endValue);
+        }
       }
     };
     animResult();
