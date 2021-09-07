@@ -51,6 +51,7 @@ const fieldsValidation = () => {
       ],
       'user_name': [
         ['notEmpty'],
+        ['longWord'],
         ['pattern', 'user_name']
       ]
     }
@@ -160,10 +161,11 @@ const fieldsValidation = () => {
 
   email.forEach(elem => {
     elem.addEventListener('input', e => {
-      e.target.value = e.target.value.replace(/[^A-Za-z-_@~.!*']/g, '');
+      e.target.value = e.target.value.replace(/[^\dA-Za-z-_@~.!*']/g, '');
     });
     elem.addEventListener('blur', e => {
-      e.target.value = e.target.value.replace(/^-+|-+$|[^A-Za-z-_@~.!*']/g, '');
+      e.target.value = e.target.value.replace(/^-+|-+$|[^\dA-Za-z-_@~.!*']/g, '');
+      elem.dispatchEvent(new Event('change'));
     });
   });
 

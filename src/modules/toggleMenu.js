@@ -1,14 +1,17 @@
 const toggleMenu = () => {
 
   const anchors = document.querySelectorAll('a[href^="#"]');
-
   for (const anchor of anchors) {
     const blockID = anchor.getAttribute('href');
+
+    anchor.addEventListener('click', e => {
+      e.preventDefault();
+    });
+
     if (blockID === '#') continue;
 
     if (document.querySelector(blockID)) {
-      anchor.addEventListener('click', e => {
-        e.preventDefault();
+      anchor.addEventListener('click', () => {
         console.log('blockID: ', document.querySelector(blockID));
         document.querySelector(blockID).scrollIntoView({
           behavior: 'smooth',
@@ -25,6 +28,7 @@ const toggleMenu = () => {
   };
 
   document.addEventListener('click', e => {
+    // e.preventDefault();
     const target = e.target;
     if (target.classList.contains('close-btn') ||
     target.closest('menu>ul>li>a') ||

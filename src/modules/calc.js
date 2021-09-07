@@ -37,12 +37,18 @@ const calc = (price = 100) => {
     animResult();
   };
 
-  const countSum = () => {
+  const countSum = target => {
     let total = 0;
     let countValue = 1;
     let dayValue = 1;
     const typeValue = calcType.options[calcType.selectedIndex].value;
     const squareValue = +calcSquare.value;
+
+    if (target === calcType && typeValue === '') {
+      calcSquare.value = '';
+      calcCount.value = '';
+      calcDay.value = '';
+    }
 
     if (calcCount.value > 1) {
       countValue += (calcCount.value - 1) / 10;
@@ -65,7 +71,7 @@ const calc = (price = 100) => {
     const target = e.target;
 
     if (target === calcType || calcSquare || calcCount || calcDay) {
-      countSum();
+      countSum(target);
     }
   });
 };

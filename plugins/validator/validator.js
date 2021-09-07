@@ -37,6 +37,15 @@ class Validator {
       },
       pattern(elem, pattern) {
         return pattern.test(elem.value);
+      },
+      longWord(elem) {
+        let flag = true;
+        elem.value.trim().replace(/ {2,}/g, ' ').split(' ').forEach(element => {
+          if (element.length < 2) {
+            flag = false;
+          }
+        });
+        return flag;
       }
     };
 

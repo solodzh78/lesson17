@@ -2,6 +2,19 @@ const togglePopup = () => {
   const popup = document.querySelector('.popup');
   const popupBtn = document.querySelectorAll('.popup-btn');
 
+
+
+
+  function debounce(f, ms) {
+    let isCooldown = false;
+    return function(...args) {
+      if (isCooldown) return;
+      f.apply(this, args);
+      isCooldown = true;
+      setTimeout(() => isCooldown = false, ms);
+    };
+  }
+
   // Popup animation
   const popupOpenAnim = () => {
 
@@ -48,10 +61,10 @@ const togglePopup = () => {
 
 
   popupBtn.forEach(elem => {
-    elem.addEventListener('click', popupOpenAnim);
+    elem.addEventListener('click', debounce(popupOpenAnim, 250));
   });
 
-  popup.addEventListener('click', e => {
+  popup.addEventListener('click', debounce(e => {
     let target = e.target;
 
     if (target.classList.contains('popup-close')) {
@@ -61,7 +74,7 @@ const togglePopup = () => {
 
       if (!target) { popupCloseAnim(); }
     }
-  });
+  }, 250));
 
 };
 
