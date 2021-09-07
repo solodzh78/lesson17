@@ -12,7 +12,6 @@ const toggleMenu = () => {
 
     if (document.querySelector(blockID)) {
       anchor.addEventListener('click', () => {
-        console.log('blockID: ', document.querySelector(blockID));
         document.querySelector(blockID).scrollIntoView({
           behavior: 'smooth',
           block: 'start'
@@ -28,7 +27,6 @@ const toggleMenu = () => {
   };
 
   document.addEventListener('click', e => {
-    // e.preventDefault();
     const target = e.target;
     if (target.classList.contains('close-btn') ||
     target.closest('menu>ul>li>a') ||

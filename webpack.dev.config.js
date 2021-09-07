@@ -11,7 +11,13 @@ module.exports = {
     open: true,
     port: 8080,
     hot: true,
-    writeToDisk: true,
+    devMiddleware: {
+      writeToDisk: true,
+    },
+    static: {
+      directory: __dirname,
+      watch: true,
+    }
   },
   module: {
     rules: [
