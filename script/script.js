@@ -537,7 +537,7 @@ window.addEventListener('DOMContentLoaded', () => {
         body[val[0]] = val[1];
       }
       // Fetch=====================================================================
-      const postData = body => fetch('./server.php', {
+      const postData = body => fetch('./server1.php', {
         method: 'POST',
         body: JSON.stringify(body),
         headers: {
@@ -557,18 +557,35 @@ window.addEventListener('DOMContentLoaded', () => {
         }, 2000);
       };
 
-      postData(body)
-        .then(response => {
+      // postData(body)
+      //   .then(response => {
 
-          if (response.status !== 200) {
+      // if (response.status !== 200) {
+      //   throw new Error('Status network not 200');
+      // }
+      //     showMessage(successMassage);
+      //   })
+      //   .catch(error => {
+      //     console.error(error);
+      //     showMessage(errorMassage);
+      //   });
+
+
+      (async () => {
+
+        try {
+          const res = await postData(body);
+
+          if (res.status !== 200) {
             throw new Error('Status network not 200');
           }
           showMessage(successMassage);
-        })
-        .catch(error => {
-          console.error(error);
+        } catch (err) {
           showMessage(errorMassage);
-        });
+          console.error(err);
+        }
+
+      })();
     });
   };
 
